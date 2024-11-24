@@ -1,5 +1,7 @@
 local events = require("events")
+local process = require("process")
 local screen = require("screen")
+local fs = require("fs")
 
 function _init()
     screen.init(480, 270)

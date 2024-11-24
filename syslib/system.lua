@@ -1,6 +1,9 @@
 -- This package is for stuff that are included in every process.
 -- Mostly for QOL stuff
 do
+    -- TODO: Change include semantics.
+    -- Any filename that does not end with .lua should be first checked on system libraries.
+    -- I.E: require("screen") gets system file while require("screen.lua") gets file in same location (if present)
     local loaded_packages = {}
     function require(filename)
         if filename:ext() == nil then
@@ -15,6 +18,10 @@ do
             elseif fetch("/appdata/lib/"..filename) then
                 path = "/appdata/lib/"..filename
             end
+        end
+
+        if loaded_packages[path] then
+            return loaded_packages[path]
         end
 
         local code = fetch(path)
