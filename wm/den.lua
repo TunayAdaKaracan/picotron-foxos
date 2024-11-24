@@ -1,4 +1,5 @@
 -- Some metadata about this WM
+-- WM's should be switchable
 local den = {
     name = "Den WM",
     description = "Default WM for FoxOS"
@@ -51,6 +52,11 @@ function den.delete_process(procdata)
         -- Shouldn't happen but incase
         printh("This is a big OOF from den.lua")
     end
+end
+
+-- This function should save to /ram/shared/windows.pod
+-- Do we need actual WM process to handle this or should it be handled within WM handler?
+function den.save_process_data()
 end
 
 

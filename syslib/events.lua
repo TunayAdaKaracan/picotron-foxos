@@ -2,33 +2,32 @@ local events = {}
 
 local event_handlers = {}
 local forward = {}
-
-local keys = {}
-local frame_keys = {}
+local default_handlers = {
+    keydown = keydown,
+    keyup = keyup
+}
 
 -- TODO: Support wildcards
 function events.on_event(name, func)
-    if not event_handlers[name] then
-        event_handlers[name] = {}
-    end
+    event_handlers[name] = event_handlers[name] or {}
     add(event_handlers[name], func)
 end
 
 function events.process_events()
-    frame_keys = {}
+    local processed_events = {}
+    reset_event_states()
     repeat
         local msg = _read_message()
         if not msg then return end
 
+        add(process_events, msg)
+        
         for _, func in pairs(forward) do
             func(msg)
         end
 
-        if msg.event == "keydown" then
-            add(keys, msg.scancode)
-            add(frame_keys, msg.scancode)
-        elseif msg.event == "keyup" then
-            del(keys, msg.scancode)
+        if default_handlers[msg.event] then
+            default_handlers[msg.event](msg.event)
         end
 
         if event_handlers[msg.event] then
@@ -39,9 +38,10 @@ function events.process_events()
 
     until not msg
 
-    return all_events
+    return processed_events
 end
 
+-- TODO: Replace this with generic events
 function events.subscribe_to_events(func)
     add(forward, func)
 end
@@ -63,11 +63,30 @@ function events.wait_for_event(name, check)
     end
 end
 
+local function reset_event_states()
+    frame_keys = {}
+end
+
+-- Keyboard events
+-- TODO: Key Mappings
+-- TODO: Maybe inputs should have their own module?
+local keys = {}
+local frame_keys = {}
+
 local function contains(t, val)
     for _, tval in pairs(t) do
         if tval == val then return true end
     end
     return false
+end
+
+local function keydown(msg)
+    add(keys, msg.scancode)
+    add(frame_keys, msg.scancode)
+end
+
+local function keyup(msg)
+    del(keys, msg.scancode)
 end
 
 function events.key(scancode)

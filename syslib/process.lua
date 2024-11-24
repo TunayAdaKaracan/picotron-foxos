@@ -50,14 +50,21 @@ function process.get_process(pid)
     return nil
 end
 
+-- Potentially dangerous. Do we care?
+-- Since we have all kernel available to all processes at anytime, it doesn't matter much if we deny a request or not
 function process.kill_process(pid)
     _kill_process(pid)
     process.broadcast("system_kill_process", {id=pid})
 end
 
+-- since instead of pm sending this, we can still have _from field as it is
 function process.broadcast(name, data)
-    data = data or {}
-    data.event = name
+    if type(name) == "table" then
+        data = name
+    else
+        data = data or {}
+        data.event = name
+    end
     for _, procdata in pairs(process.get_process()) do
         send_message(procdata.id, data)
     end
@@ -69,6 +76,7 @@ end
 
 -- Get another process' window information from WM
 -- Returns nil if WM does not have this information at all
+-- How to? Either by waiting or using a shared file??
 function process.get_window(pid)
 end
 

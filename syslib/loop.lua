@@ -19,6 +19,8 @@ function _frame()
     end
 end
 
+-- Possibly a process might want to stay hanged in a state until something happens.
+-- I.E: events.wait_for_event function
 function _frame_end()
     flip()
 end

@@ -1,6 +1,5 @@
 -- This package is for stuff that are included in every process.
 -- Mostly for QOL stuff
-
 do
     local loaded_packages = {}
     function require(filename)
@@ -9,7 +8,7 @@ do
         end
         local path = fullpath(filename)
 
-        -- If the path is not a absolout path, it might be a system library
+        -- If the path is not a absolute path, it might be a system library
         if not fetch(path) then
             if fetch("/system/syslib/"..filename) then
                 path = "/system/syslib/"..filename
@@ -33,6 +32,7 @@ do
         return result
     end
 
+    -- TODO: Implement other string and QOL features
     function string:ext()
 		local loc = split(self,"#",false)[1]
 		-- max extension length: 16
@@ -57,5 +57,8 @@ do
         _print_p8scii(text, x, y, color)
     end
 
+    -- Kernel functions will be accessible. However, most kernel functions will have a better alternative within the system.
+    -- Raw kernel functions still should be avoided unless there is no alternative
+    -- Those who can be used as they are has an alias to make typing easier
     ppeek = _ppeek
 end
