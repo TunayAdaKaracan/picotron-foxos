@@ -20,7 +20,7 @@ function events.process_events()
         local msg = _read_message()
         if not msg then return end
 
-        add(process_events, msg)
+        add(processed_events, msg)
         
         for _, func in pairs(forward) do
             func(msg)
@@ -46,9 +46,9 @@ function events.subscribe_to_events(func)
     add(forward, func)
 end
 
+-- TODO: Add timeouts
 function events.wait_for_event(name, check)
-    local exit = false
-    while not exit do
+    while true do
         repeat
             local msg = _read_message()
             if not msg then break end
