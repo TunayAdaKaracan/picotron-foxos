@@ -18,7 +18,6 @@ local function find_event_by_name(name)
     end)
 end
 
--- TODO: Support wildcards
 function events.on_event(name, func)
     event_handlers[name] = event_handlers[name] or {}
     add(event_handlers[name], func)
