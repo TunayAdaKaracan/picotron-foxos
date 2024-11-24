@@ -3,11 +3,6 @@ local screen = require("screen")
 
 function _init()
     screen.init(480, 270)
-
-    -- Change to generic events
-    events.subscribe_to_events(function(msg)
-        send_message(2, msg)
-    end)
 end
 
 function _draw()
@@ -18,3 +13,7 @@ end
 function _update()
     events.process_events()
 end
+
+events.on_event("*", function(event)
+    send_message(2, event)
+end)

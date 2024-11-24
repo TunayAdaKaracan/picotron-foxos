@@ -1,7 +1,7 @@
 --
 local minimal = {
     name = "Minimal",
-    description = "A terminal like minimal VM"
+    description = "A terminal like minimal WM"
 }
 
 function minimal.update()

@@ -57,6 +57,71 @@ do
         _print_p8scii(text, x, y, color)
     end
 
+    function all_keys(tbl)
+        local key = nil
+        return function()
+            key = next(tbl, key)
+            return key
+        end
+    end
+
+    function all_values(tbl)
+        local key = nil 
+    
+        return function()
+            key = next(tbl, key)
+            if key == nil then
+                return nil
+            else
+                return tbl[key]
+            end
+        end
+    end
+    all = all_values
+    
+    local function contains(t, val)
+        for _, tval in pairs(t) do
+            if tval == val then return true end
+        end
+        return false
+    end
+
+    function find_by_key(tbl, callback)
+        local tmp = {}
+
+        for key, value in pairs(tbl) do
+            if callback(key) then
+                add(tmp, {key, value})
+            end
+        end
+
+        return tmp
+    end
+
+    function find_by_value(tbl, callback)
+        local tmp = {}
+        if type(callback) == "table" then
+            local fields = callback
+            callback = function(value)
+                for field in all(fields) do 
+                    if not contains(value, field) then
+                        return false
+                    end
+                end
+                return true
+            end
+        end
+
+        for key, value in pairs(tbl) do
+            if callback(value) then
+                add(tmp, {key, value})
+            end
+        end
+
+        return tmp
+    end
+
+
     -- Kernel functions will be accessible. However, most kernel functions will have a better alternative within the system.
     -- Raw kernel functions still should be avoided unless there is no alternative
     -- Those who can be used as they are has an alias to make typing easier
