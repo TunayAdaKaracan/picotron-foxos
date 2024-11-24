@@ -1,0 +1,2 @@
+0x000000: Window flags:
+0th bit: 1 if app has a display 0 if headless
