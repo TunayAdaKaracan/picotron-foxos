@@ -4,6 +4,12 @@ local minimal = {
     description = "A terminal like minimal WM"
 }
 
+function minimal.load()
+end
+
+function minimal.unload()
+end
+
 function minimal.update()
 end
 

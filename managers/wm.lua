@@ -1,21 +1,33 @@
-local events = require("events")
-local process = require("process")
 local screen = require("screen")
-local fs = require("fs")
+local events = require("events")
+
+local selected_wm = "den"
+
+local current_wm = nil
+
+local function load_wm(name)
+    if current_wm then
+        current_wm.unload()
+    end
+    
+    current_wm = require(name)
+    current_wm.load()
+end
 
 function _init()
     screen.init(480, 270)
+    load_wm("/system/wm/"..selected_wm)
 end
 
 function _draw()
-    cls(7)
-    rect(0, 0, 100, 100, 22)
+    current_wm.draw()
 end
 
 function _update()
     events.process_events()
+    current_wm.update()
 end
 
 events.on_event("*", function(event)
-    send_message(2, event)
+
 end)
