@@ -27,6 +27,6 @@ while true do
     local _, used = _run_process_slice(3, 0.9)
 
     -- A small debugger lol
-    printh("Used: "..tostring(used))
+    --printh("Used: "..tostring(used))
     flip()
 end
