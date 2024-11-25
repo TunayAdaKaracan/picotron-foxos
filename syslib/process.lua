@@ -1,4 +1,3 @@
-
 local process = {}
 
 function process.get_prog_name(path)

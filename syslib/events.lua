@@ -1,11 +1,14 @@
 local events = {}
 
 local event_handlers = {}
-local forward = {}
 local default_handlers = {
     keydown = keydown,
     keyup = keyup
 }
+
+local function reset_event_states()
+    frame_keys = {}
+end
 
 local function match_event_name(pattern, str)
     local regex = "^" .. pattern:gsub("%*", ".*") .. "$"
@@ -32,10 +35,6 @@ function events.process_events()
         local event_name = msg.event
 
         add(processed_events, msg)
-        
-        for _, func in pairs(forward) do
-            func(msg)
-        end
 
         if default_handlers[event_name] then
             default_handlers[event_name](event_name)
@@ -43,7 +42,7 @@ function events.process_events()
 
         local events_to_run = find_event_by_name(event_name)
         if #events_to_run != 0 then
-            for _, funcs in all(events_to_run) do
+            for _, funcs in unpack(all(events_to_run)) do
                 for func in all(funcs) do
                     func(msg)
                 end
@@ -70,10 +69,6 @@ function events.wait_for_event(name, check)
         until not msg
         _frame_end()
     end
-end
-
-local function reset_event_states()
-    frame_keys = {}
 end
 
 -- Keyboard events

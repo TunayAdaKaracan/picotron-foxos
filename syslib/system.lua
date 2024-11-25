@@ -23,12 +23,12 @@ do
         if loaded_packages[path] then
             return loaded_packages[path]
         end
-
+        
         local code = fetch(path)
         local func, err = load(code, "@"..filename, "t", _ENV)
 
         if err or func == nil then
-            _printh("BIG ERROR: "..err)
+            printh("BIG ERROR: "..err)
             return
         end
 
@@ -58,6 +58,10 @@ do
 
     function printh(text)
         _printh("[PROC "..tostring(pid()).."]: "..tostring(text))
+    end
+
+    function debug(text)
+        printh("[PROC "..tostring(pid()).." DEBUG]: "..tostring(text))
     end
 
     function print(text, x, y, color)
@@ -128,6 +132,23 @@ do
         return tmp
     end
 
+    -- Functions defined in this format means they are either aliases or they are trying to replace function with a better alternative
+    -- For this case I added ability to use unpack with an iterator
+    unpack = function(data)
+        if type(data) == "table" then return table.unpack(data) end
+        if type(data) == "function" then
+            return function()
+                local value = data()
+                if value == nil then return nil end
+                return table.unpack(value)
+            end
+        end
+
+        debug("unpack function is not implemented for type of '"..type(data).."'")
+        return function()
+            return nil
+        end
+    end
 
     -- Kernel functions will be accessible. However, most kernel functions will have a better alternative within the system.
     -- Raw kernel functions still should be avoided unless there is no alternative
