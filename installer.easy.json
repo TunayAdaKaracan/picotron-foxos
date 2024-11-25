@@ -1,0 +1,13 @@
+{
+    "$url": "https://raw.githubusercontent.com/TunayAdaKaracan/picotron-foxos/refs/heads/main/",
+    "$files": ["installer.easy.json", "osinfo.json.lua", "sysboot.lua"],
+    "managers": {
+        "$files": ["pm.lua", "wm.lua"]
+    },
+    "syslib": {
+        "$files": ["system.lua", "events.lua", "loop.lua", "screen.lua", "process.lua", "fs.lua", "gui.lua"]
+    },
+    "wm": {
+        "$files": ["den.lua", "minimal.lua"]
+    }
+}
