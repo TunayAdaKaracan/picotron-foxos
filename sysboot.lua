@@ -15,6 +15,9 @@ process.create_foxos_process("/system/managers/pm.lua")
 printh("Creating wm")
 process.create_foxos_process("/system/managers/wm.lua")
 
+printh("Creating testapp")
+process.create_foxos_process("/system/apps/testapp.lua")
+
 -- signal(37) what makes skip boot screen
 _signal(37)
 
@@ -24,7 +27,8 @@ _signal(37)
 while true do
     -- Runs a process with a given amount of cpu
     _run_process_slice(2, 0.1)
-    local _, used = _run_process_slice(3, 0.9)
+    local _, used = _run_process_slice(3, 0.8)
+    _run_process_slice(4, 0.1)
 
     -- A small debugger lol
     --printh("Used: "..tostring(used))

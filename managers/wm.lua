@@ -28,6 +28,10 @@ function _update()
     current_wm.update()
 end
 
-events.on_event("*", function(event)
+events.on_event("system_create_new_process", function(event)
+    current_wm.create_new_process(event)
+end)
 
+events.on_event("system_kill_process", function(event)
+    current_wm.delete_process(event)
 end)

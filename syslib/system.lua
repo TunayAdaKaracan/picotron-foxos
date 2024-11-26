@@ -39,23 +39,6 @@ do
         return result
     end
 
-    -- TODO: Implement other string and QOL features
-    function string:ext()
-		local loc = split(self,"#",false)[1]
-		-- max extension length: 16
-		for i = 1,16 do
-			if (string.sub(loc,-i,-i) == ".") then
-				-- try to find double ext first e.g. .p8.png  but not .info.pod
-				for j = i+1,16 do
-					if (string.sub(loc,-j,-j) == "/") return string.sub(loc, -i + 1) -- path separator -> return just the single segment
-					if (string.sub(loc,-j,-j) == "." and #loc > j) return string.sub(loc, -j + 1)
-				end
-				return string.sub(loc, -i + 1)
-			end
-		end
-		return nil -- "no extension"
-	end
-
     function printh(text)
         _printh("[PROC "..tostring(pid()).."]: "..tostring(text))
     end
@@ -67,6 +50,8 @@ do
     function print(text, x, y, color)
         _print_p8scii(text, x, y, color)
     end
+
+    -- Utilities
 
     function all_keys(tbl)
         local key = nil
@@ -109,13 +94,25 @@ do
         return tmp
     end
 
+    --[[
+        local messages = {
+            {content="hello", author="Kutup"},
+            {content="How?", author="Kutup"}
+        }
+        
+        find_by_value(messages, {content="hello"}) -> { {1, {content="hello", author="Kutup"}} }
+        find_by_value(messages, {author="Kutup"}) -> { {1, {content="hello", author="Kutup"}}, {2, {content="How?", author="Kutup"}} }
+        find_by_value(messages, function(value)
+            return value..content == "hello"
+        end) -> Same as first one
+    ]]
     function find_by_value(tbl, callback)
         local tmp = {}
         if type(callback) == "table" then
             local fields = callback
-            callback = function(value)
-                for field in all(fields) do 
-                    if not contains(value, field) then
+            callback = function(check_value)
+                for key, value in pairs(fields) do 
+                    if check_value[key] == nil or check_value[key] != value then
                         return false
                     end
                 end
@@ -131,6 +128,23 @@ do
 
         return tmp
     end
+
+    -- TODO: Implement other string and QOL features
+    function string:ext()
+		local loc = split(self,"#",false)[1]
+		-- max extension length: 16
+		for i = 1,16 do
+			if (string.sub(loc,-i,-i) == ".") then
+				-- try to find double ext first e.g. .p8.png  but not .info.pod
+				for j = i+1,16 do
+					if (string.sub(loc,-j,-j) == "/") return string.sub(loc, -i + 1) -- path separator -> return just the single segment
+					if (string.sub(loc,-j,-j) == "." and #loc > j) return string.sub(loc, -j + 1)
+				end
+				return string.sub(loc, -i + 1)
+			end
+		end
+		return nil -- "no extension"
+	end
 
     -- Functions defined in this format means they are either aliases or they are trying to replace function with a better alternative
     -- For this case I added ability to use unpack with an iterator
@@ -148,6 +162,26 @@ do
         return function()
             return nil
         end
+    end
+
+    random = function(rnd_start, rnd_end, integer)
+        if not rnd_end and rnd_start then
+            rnd_end = rnd_start
+            rnd_start = 0
+        end
+
+        if rnd_start > rnd_end then
+            local tmp = rnd_start
+            rnd_start = rnd_end
+            rn_end = tmp
+        end
+
+        integer = integer or false
+
+        local rand = rnd(rnd_end - rnd_start) + rnd_start
+        if not integer then return rand end
+        -- TODO: Rethink this part. Should we really round it up?
+        return rand % flr(rand) >= 0.5 and ceil(rand) or flr(rand)
     end
 
     -- Kernel functions will be accessible. However, most kernel functions will have a better alternative within the system.

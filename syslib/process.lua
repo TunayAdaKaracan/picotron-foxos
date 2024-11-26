@@ -32,7 +32,7 @@ function process.create_foxos_process(path)
     ]]
     
     local pid = _create_process_from_code(source, name.."."..ext)
-    process.broadcast("system_create_new_process", {id=pid})
+    process.broadcast("system_create_new_process", process.get_process(pid))
 end
 
 function process.get_process(pid)
@@ -40,20 +40,24 @@ function process.get_process(pid)
         return _get_process_list()
     end
 
-    for _, procdata in pairs(_get_process_list()) do
-        if procdata.id == pid then
-            return procdata
+    for process in all(_get_process_list()) do
+        if process.id == pid then
+            return process
         end
     end
 
     return nil
 end
 
+function process.get_process_list()
+    return process.get_process()
+end
+
 -- Potentially dangerous. Do we care?
 -- Since we have all kernel available to all processes at anytime, it doesn't matter much if we deny a request or not
 function process.kill_process(pid)
+    process.broadcast("system_kill_process", process.get_process(pid))
     _kill_process(pid)
-    process.broadcast("system_kill_process", {id=pid})
 end
 
 -- since instead of pm sending this, we can still have _from field as it is
