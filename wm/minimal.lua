@@ -16,7 +16,7 @@ end
 function minimal.draw()
 end
 
-function minimal.create_new_process(_)
+function minimal.screen_update(_)
 end
 
 function minimal.delete_process(_)

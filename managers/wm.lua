@@ -2,7 +2,6 @@ local screen = require("screen")
 local events = require("events")
 
 local selected_wm = "den"
-
 local current_wm = nil
 
 local function load_wm(name)
@@ -28,8 +27,11 @@ function _update()
     current_wm.update()
 end
 
-events.on_event("system_create_new_process", function(event)
-    current_wm.create_new_process(event)
+events.on_event("process_screen_update", function(event)
+    -- safety
+    if pid() > 3 then
+        current_wm.screen_update(event)
+    end
 end)
 
 events.on_event("system_kill_process", function(event)
