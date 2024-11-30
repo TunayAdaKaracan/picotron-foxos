@@ -5,7 +5,7 @@
         "$files": ["pm.lua", "wm.lua"]
     },
     "syslib": {
-        "$files": ["system.lua", "events.lua", "loop.lua", "screen.lua", "process.lua", "fs.lua", "gui.lua"]
+        "$files": ["system.lua", "events.lua", "loop.lua", "screen.lua", "process.lua", "fs.lua", "gui.lua", "input.lua"]
     },
     "wm": {
         "$files": ["den.lua", "minimal.lua"]
