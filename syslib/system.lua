@@ -75,7 +75,7 @@ do
     end
     all = all_values
     
-    local function contains(t, val)
+    function contains(t, val)
         for _, tval in pairs(t) do
             if tval == val then return true end
         end
