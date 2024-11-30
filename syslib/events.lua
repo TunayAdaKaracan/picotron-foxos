@@ -11,10 +11,7 @@ local events = {}
 ]]
 
 local event_handlers = {}
-local default_handlers = {
-    keydown = keydown,
-    keyup = keyup
-}
+local hooks = {}
 local event_buffer = {
     index = 1,
     events = {}
@@ -26,10 +23,6 @@ local function uuid()
         local v = (c == 'x') and random(0, 0xf, true) or random(8, 0xb, true)
         return string.format('%x', v)
     end)
-end
-
-local function reset_event_states()
-    frame_keys = {}
 end
 
 local function match_event_name(pattern, str)
@@ -78,9 +71,17 @@ function events.remove_event(event_uuid, event_name)
     return false
 end
 
+-- For internal stuff. Using this is not recommended
+function events.hook(name, callback)
+    hooks[name] = callback
+end
+
 function events.process_events()
     local processed_events = {}
-    reset_event_states()
+    local f = hooks["reset_event_state"]
+    if f then
+        f()
+    end
     repeat
         -- An event buffer system. Event buffer used when the process is waiting for an event.
         -- Any event that is not the process have been waiting for, are added to this buffer
@@ -137,29 +138,6 @@ function events.wait_for_event(name, check, use_buffer)
         until not msg
         _frame_end()
     end
-end
-
--- Keyboard events
--- TODO: Key Mappings
--- TODO: Maybe inputs should have their own module?
-local keys = {}
-local frame_keys = {}
-
-local function keydown(msg)
-    add(keys, msg.scancode)
-    add(frame_keys, msg.scancode)
-end
-
-local function keyup(msg)
-    del(keys, msg.scancode)
-end
-
-function events.key(scancode)
-    return contains(keys, scancode)
-end
-
-function events.keyp(scancode)
-    return contains(frame_keys, scancode)
 end
 
 return events
