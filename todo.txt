@@ -1,0 +1,8 @@
+Layered drawing and access to screen buffer before app is drawen
+Better palette system enabling windowed applications to use extra colors without changing system palette
+Maybe multi-user setup
+Support for legacy(default os) picotron apps
+Switchable WM
+Better terminal
+Included QOL Libraries
+More of atomic design
